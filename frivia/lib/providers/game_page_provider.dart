@@ -70,6 +70,19 @@ class GamePageProvider extends ChangeNotifier {
     return '$_currentScore/$_currentQuestionindex';
   }
 
+  String getGameOverText() {
+    double percent =
+        _currentScore.toDouble() * 100.0 / _currentQuestionindex.toDouble();
+    if (percent >= 90.0) {
+      return 'Great Job!';
+    } else if (percent >= 75.0) {
+      return 'Nice score!';
+    } else if (percent >= 50.0) {
+      return 'Not bad!';
+    }
+    return 'Try better next time.';
+  }
+
   void endGame() async {
     showDialog(
       context: context,
@@ -77,13 +90,25 @@ class GamePageProvider extends ChangeNotifier {
         return AlertDialog(
           backgroundColor: Colors.blue,
           title: const Text(
-            "End Game!",
+            "Game Over!",
             style: TextStyle(
               fontSize: 25,
               color: Colors.white,
             ),
           ),
-          content: Text('Score: ' + getScore()),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                'Score: ' + getScore(),
+              ),
+              Text(
+                getGameOverText(),
+              ),
+            ],
+          ),
         );
       },
     );
