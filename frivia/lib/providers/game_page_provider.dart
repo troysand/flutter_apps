@@ -37,6 +37,10 @@ class GamePageProvider extends ChangeNotifier {
     return questions![_currentQuestionindex]['question'];
   }
 
+  ///
+  /// Show an alert dialog informing the user whether the answer was correct
+  /// of incorrect. Also displays the current score.
+  ///
   void answerQuestion(String answer) async {
     bool isCorrect =
         questions![_currentQuestionindex]['correct_answer'] == answer;
@@ -70,6 +74,10 @@ class GamePageProvider extends ChangeNotifier {
     return '$_currentScore/$_currentQuestionindex';
   }
 
+  ///
+  /// Get a string to display to the user after the game is over.
+  /// The string is different depending on the user's final score.
+  ///
   String getGameOverText() {
     double percent =
         _currentScore.toDouble() * 100.0 / _currentQuestionindex.toDouble();
@@ -83,17 +91,24 @@ class GamePageProvider extends ChangeNotifier {
     return 'Try better next time.';
   }
 
+  ///
+  /// This function is called when the game is over to display a popup
+  /// showing the players final score. The popup will disappear after
+  /// a few seconds.
+  ///
   void endGame() async {
     showDialog(
       context: context,
       builder: (BuildContext c) {
         return AlertDialog(
           backgroundColor: Colors.blue,
-          title: const Text(
-            "Game Over!",
-            style: TextStyle(
-              fontSize: 25,
-              color: Colors.white,
+          title: const Center(
+            child: Text(
+              "Game Over!",
+              style: TextStyle(
+                fontSize: 25,
+                color: Colors.white,
+              ),
             ),
           ),
           content: Column(
@@ -103,18 +118,30 @@ class GamePageProvider extends ChangeNotifier {
             children: [
               Text(
                 'Score: ' + getScore(),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
               Text(
                 getGameOverText(),
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
         );
       },
     );
+
+    // wait a few seconds then navigate back to the home page by popping
+    // the end game alert dialgog, and then popping the game page.
     await Future.delayed(const Duration(seconds: 5));
     Navigator.pop(context);
     Navigator.pop(context);
-    _currentQuestionindex = 0;
   }
 }
