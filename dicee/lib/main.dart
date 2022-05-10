@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,7 +21,7 @@ class DiceApp extends StatelessWidget {
 
   AppBar _appBar() {
     return AppBar(
-      title: const Text('Dicee'),
+      title: const Center(child: Text('Dicee')),
       backgroundColor: Colors.red,
     );
   }
@@ -34,18 +35,21 @@ class DicePage extends StatefulWidget {
 }
 
 class _DicePageState extends State<DicePage> {
+  int _leftDiceNumber = Random().nextInt(6) + 1;
+  int _rightDiceNumber = Random().nextInt(6) + 1;
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Row(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                child: Image.asset('images/dice6.png'),
+                child: Image.asset('images/dice$_leftDiceNumber.png'),
                 onPressed: () {
-                  print('button 1 pressed.');
+                  _rollDice();
                 },
               ),
             ),
@@ -54,9 +58,9 @@ class _DicePageState extends State<DicePage> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextButton(
-                child: Image.asset('images/dice2.png'),
+                child: Image.asset('images/dice$_rightDiceNumber.png'),
                 onPressed: () {
-                  print('button 2 pressed.');
+                  _rollDice();
                 },
               ),
             ),
@@ -64,5 +68,12 @@ class _DicePageState extends State<DicePage> {
         ],
       ),
     );
+  }
+
+  void _rollDice() {
+    setState(() {
+      _leftDiceNumber = Random().nextInt(6) + 1;
+      _rightDiceNumber = Random().nextInt(6) + 1;
+    });
   }
 }
